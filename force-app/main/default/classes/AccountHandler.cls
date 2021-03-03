@@ -32,6 +32,8 @@ global class AccountHandler
                     updateTsks.OwnerId = users.get(rnd).Id;
                     upsertTsks.add(updateTsks);
                 }
+
+                update upsertTsks;
             }
 
             else
@@ -41,9 +43,8 @@ global class AccountHandler
                 tsk.Subject = subject;
                 tsk.WhatId = acct.Id;
                 upsertTsks.add(tsk);
+                insert upsertTsks;
             }
         }
-
-        upsert upsertTsks;
     }
 }
