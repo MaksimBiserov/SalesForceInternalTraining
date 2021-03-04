@@ -1,14 +1,14 @@
 
-global class AccountHandler
+public class AccountHandler
 {
     @InvocableMethod
 
-    global static void CreateTaskForAccount(List<Id> IDs)
+    public static void CreateTaskForAccount(List<Id> IDs)
     {
         List<Account> allAccts = [SELECT Id, Name FROM Account WHERE Account.Id IN :IDs];
         List<Task> allTsks = [SELECT Subject, OwnerId, WhatId FROM Task WHERE Account.Id IN :allAccts];
         List<Task> upsertTsks = new List<Task>();
-        List<User> users = [SELECT Name FROM User];
+        List<User> users = [SELECT Name FROM User WHERE IsActive = TRUE];
         List<Task> acctTsks;
 
         for (Account acct : allAccts)
@@ -26,25 +26,23 @@ global class AccountHandler
             if (acctTsks.size() > 3)
             {
                 Integer rnd = Integer.valueOf(Math.random() * users.size());
-
                 for (Task updateTsks : acctTsks)
                 {
                     updateTsks.OwnerId = users.get(rnd).Id;
                     upsertTsks.add(updateTsks);
                 }
-
-                update upsertTsks;
             }
 
             else
             {
-                Task tsk = new Task();
+                Task insertTsks = new Task();
                 String subject = 'Negotiations with ' + acct.Name;
-                tsk.Subject = subject;
-                tsk.WhatId = acct.Id;
-                upsertTsks.add(tsk);
-                insert upsertTsks;
+                insertTsks.Subject = subject;
+                insertTsks.WhatId = acct.Id;
+                upsertTsks.add(insertTsks);
             }
         }
+
+        upsert upsertTsks;
     }
 }
