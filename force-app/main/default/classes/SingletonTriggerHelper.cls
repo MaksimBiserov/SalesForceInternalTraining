@@ -1,14 +1,14 @@
 
 public class SingletonTriggerHelper
 {
-    private static boolean flagval = true;
+    private static Boolean firstStart = true;
 
-    public static void OnAfterInsert(Account[] newAccts)
+    public static void OnHelper(List<Account> newAccts)
     {
-        if(flagval)
+        if(firstStart)
         {
             System.debug('Single run of SingletonTrigger');
-            flagval = false;
+            firstStart = false;
         }
     }
 }
