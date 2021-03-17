@@ -1,7 +1,7 @@
 public class AccountTriggerHandler {
-    public static void OnAfterInsert(List<Id> newAccts)
+    public static void OnAfterInsert(List<Account> newAccts)
     {
-        AccountTriggerHelper.CreateTaskForAccount(newAccts);
+        AccountTriggerHelper.doCreate(newAccts);
     }
 
     public static void OnAfterUpdate(Map<Id, Account> oldMap, Map<Id, Account> newMap)

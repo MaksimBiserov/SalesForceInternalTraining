@@ -13,9 +13,20 @@ public with sharing class AccountTriggerHelper {
             insertTask.WhatId = acct.Id;
             insertTask.Is_Synced__c = false;
             tsks.add(insertTask);
+            System.debug(insertTask.Subject);
         }
 
         insert tsks;
+    }
+    
+    public static void doCreate(List<Account> accts) {
+        List<Id> IDs = new List<Id>();
+
+        for(Account acct : accts) {
+            IDs.add(acct.Id);
+        }
+
+        CreateTaskForAccount(IDs);
     }
 
     public static void updateContacts(Map<Id, Account> oldMap, Map<Id, Account> newMap) {
@@ -35,6 +46,7 @@ public with sharing class AccountTriggerHelper {
         futureUpdate(IDs);
         QueueableUpdateContacts queConts = new QueueableUpdateContacts(IDs);
         System.enqueueJob(queConts);
+        
     }
 
     @future
@@ -44,6 +56,7 @@ public with sharing class AccountTriggerHelper {
         for (Contact cont : contacts ) {
             cont.Is_Synced__c = false;
             cont.Processed_By_Future__c = true;
+            System.debug('IsSynced = ' + cont.Is_Synced__c + ', Processed_By_Future = ' + cont.Processed_By_Future__c + ' updated.');
         }
 
         update contacts;
