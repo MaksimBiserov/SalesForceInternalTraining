@@ -7,15 +7,16 @@ public with sharing class AccountIntegrationRestWebService {
         public String name {get; set;}
     }
  
-    public static void getAccount(Id acctId) {
+    public static HttpResponse getAccount(Id acctId) {
         request = new HttpRequest();
         request.setMethod('GET');
         request.setEndpoint('callout:SalesforceAccount/services/apexrest/Account/' + acctId);
         response = http.send(request);
         System.debug(response.getBody());
+        return response;
     }
  
-    public static void createAccount(NewAccountCreator newAccount) {
+    public static HttpResponse createAccount(NewAccountCreator newAccount) {
         request = new HttpRequest();
         request.setMethod('POST');
         request.setEndpoint('callout:SalesforceAccount/services/apexrest/Account/');
@@ -23,17 +24,19 @@ public with sharing class AccountIntegrationRestWebService {
         request.setBody(JSON.serialize(newAccount));
         response = http.send(request); 
         System.debug(response.getBody());
+        return response;
     }
-    public static void deleteAccount(Id acctId) {
+    public static HttpResponse deleteAccount(Id acctId) {
         request = new HttpRequest();
         request.setMethod('DELETE');
         request.setEndpoint('callout:SalesforceAccount/services/apexrest/Account/' + acctId);
         response = http.send(request); 
         System.debug(response.getBody());
         System.debug(acctId + ' deleted');
+        return response;
     }
     
-    public static void upsertAccount(Id acctId, String acctName) {
+    public static HttpResponse upsertAccount(Id acctId, String acctName) {
         request = new HttpRequest();
         request.setMethod('PUT');
         request.setEndpoint('callout:SalesforceAccount/services/apexrest/Account/');
@@ -41,9 +44,10 @@ public with sharing class AccountIntegrationRestWebService {
         request.setBody('{"id": "' + acctId + '", "name": "' + acctName + '"}');
         response = http.send(request);
         System.debug(response.getBody());
+        return response;
     }
     
-    public static void updateAccount(Id acctId, String acctName) {
+    public static HttpResponse updateAccount(Id acctId, String acctName) {
         request = new HttpRequest();
         request.setMethod('POST');
         request.setEndpoint('callout:SalesforceAccount/services/apexrest/Account/' + acctId + '?_HttpMethod=PATCH');
@@ -52,5 +56,6 @@ public with sharing class AccountIntegrationRestWebService {
         response = http.send(request);
         System.debug(response.getBody());
         System.debug('Renamed to ' + acctName);
+        return response;
     }
 }
