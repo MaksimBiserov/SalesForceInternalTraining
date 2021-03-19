@@ -2,10 +2,6 @@ public with sharing class AccountIntegrationRestWebService {
     public static Http http = new Http();
     public static HTTPResponse response;
     public static HttpRequest request;
-    
-    public class NewAccountCreator {
-        public String name {get; set;}
-    }
  
     public static HttpResponse getAccount(Id acctId) {
         request = new HttpRequest();
@@ -16,16 +12,17 @@ public with sharing class AccountIntegrationRestWebService {
         return response;
     }
  
-    public static HttpResponse createAccount(NewAccountCreator newAccount) {
+    public static HttpResponse createAccount(String acctName) {
         request = new HttpRequest();
         request.setMethod('POST');
         request.setEndpoint('callout:SalesforceAccount/services/apexrest/Account/');
         request.setHeader('Content-Type', 'application/json;charset=UTF-8');
-        request.setBody(JSON.serialize(newAccount));
+        request.setBody('{"name" : "' + acctName + '"}');
         response = http.send(request); 
         System.debug(response.getBody());
         return response;
     }
+    
     public static HttpResponse deleteAccount(Id acctId) {
         request = new HttpRequest();
         request.setMethod('DELETE');
@@ -36,10 +33,10 @@ public with sharing class AccountIntegrationRestWebService {
         return response;
     }
     
-    public static HttpResponse upsertAccount(Id acctId, String acctName) {
+    public static HttpResponse upsertAccount(String acctName, String acctId) {
         request = new HttpRequest();
         request.setMethod('PUT');
-        request.setEndpoint('callout:SalesforceAccount/services/apexrest/Account/');
+        request.setEndpoint('callout:SalesforceAccount/services/apexrest/Account/' + acctId);
         request.setHeader('Content-Type', 'application/json;charset=UTF-8');
         request.setBody('{"id": "' + acctId + '", "name": "' + acctName + '"}');
         response = http.send(request);

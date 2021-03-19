@@ -33,16 +33,13 @@ private class AccountRestWebServiceTest {
     }
 
     @isTest static void testUpsertAccount() {
-        ID acctId = AccountRestWebService.upsertAccount(null, 'Test 03');
-        System.assert(acctId != null);
-        Account acct = [SELECT Id, Name FROM Account WHERE Id = : acctId];
-        System.assert(acct != null);
-        System.assertEquals(acct.Name, 'Test 03');
-        ID upsertAcctId = AccountRestWebService.upsertAccount(acctId, 'Test 04');
+        ID acctId = AccountRestWebService.upsertAccount('Test 03', '');
+        Account acct = [SELECT Id, Name FROM Account WHERE Id =: acctId];
+        System.assertEquals('Test 03',acct.Name);
+        ID upsertAcctId = AccountRestWebService.upsertAccount('Test 04', acctId);
         System.assertEquals(acctId, upsertAcctId);
         Account upsertAcct = [SELECT Id, Name FROM Account WHERE Id =: upsertAcctId];
-        System.assert(upsertAcct != null);
-        System.assertEquals(upsertAcct.Name, 'Test 04');
+        System.assertEquals('Test 04', upsertAcct.Name);
     }
 
     @isTest static void testUpdateAccount() {
